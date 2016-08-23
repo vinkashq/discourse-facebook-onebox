@@ -1,6 +1,8 @@
 (function ($) {
   'use strict';
 
+  $(".fb-post").attr("fb-xfbml-state", "rendered");
+  $(".fb-video").attr("fb-xfbml-state", "rendered");
   if ($('#fb-root').length == 0 )
   $('body').prepend('<div id="fb-root"></div>');
   (function(d, s, id) {
@@ -11,12 +13,20 @@
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 
-  var qXFBML;
+  $('#main').on('click', '.quote.facebook .title', function () {
+    parseXFBML(this[0]);
+    return false;
+  });
 
-  $.fn.embedFB = function () {
+  $('#main').on('click', '.quote.facebook i.fa-chevron-down', function () {
+    parseXFBML(this[0]);
+    return false;
+  });
+
+  function parseXFBML(elem) {
     if (typeof(FB) != 'undefined') {
-      FB.XFBML.parse(this[0]);
+      FB.XFBML.parse(elem);
     }
-  };
+  }
 
 })(jQuery);

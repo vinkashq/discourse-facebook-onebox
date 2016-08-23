@@ -22,7 +22,13 @@ module Onebox
 
       def to_html
         oembed_data = get_oembed_data[:html]
-        oembed_data = '<div class="embedFB">' + oembed_data + '</div>'
+        oembed_data = '<aside class="quote facebook">' + '<div style="cursor: pointer;" class="title">
+<div class="quote-controls"><i class="fa fa-chevron-down" title="expand/collapse"></i></div>
+<a href="' + url + '"><i class="fa fa-facebook-square"></i></a></div>' + oembed_data + '</aside>'
+      end
+
+      def placeholder_html
+        oembed_data = get_oembed_data[:html]
       end
 
       private
@@ -33,9 +39,9 @@ module Onebox
 
       def get_oembed_data
         if video?
-          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("https://facebook.com/plugins/video/oembed.json?url=#{url}&maxwidth=690&omitscript=true").body))
+          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("https://facebook.com/plugins/video/oembed.json?url=#{url}&maxwidth=661&omitscript=true").body))
         else
-          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("https://facebook.com/plugins/post/oembed.json?url=#{url}&maxwidth=690&omitscript=true").body))
+          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("https://facebook.com/plugins/post/oembed.json?url=#{url}&maxwidth=661&omitscript=true").body))
         end
       end
     end
