@@ -1,6 +1,6 @@
 # name: discourse-facebook-onebox
 # about: Discourse Onebox to display Facebook elements
-# version: 0.1
+# version: 0.2
 # authors: Vinoth Kannan (vinothkannans)
 # url: https://github.com/vinkas0/discourse-facebook-onebox
 
@@ -21,14 +21,11 @@ module Onebox
       always_https
 
       def to_html
-        oembed_data = get_oembed_data[:html]
-        oembed_data = '<aside class="quote facebook">' + '<div style="cursor: pointer;" class="title">
-<div class="quote-controls"><i class="fa fa-chevron-down" title="expand/collapse"></i></div>
-<a href="' + url + '"><i class="fa fa-facebook-square"></i></a></div>' + oembed_data + '</aside>'
+        oembed_data = get_html
       end
 
       def placeholder_html
-        oembed_data = get_oembed_data[:html]
+        oembed_data = get_html
       end
 
       private
@@ -36,6 +33,16 @@ module Onebox
       def video?
         url =~ /\/video.php\?|\/videos\//
       end
+	  
+	  def get_html
+		if video?
+          data = get_oembed_data[:html]
+		  data = data.sub! 'fb-video', 'fb-xfbml-parse-ignore video'
+        else
+          data = get_oembed_data[:html]
+		  data = data.sub! 'fb-post', 'fb-xfbml-parse-ignore post'
+        end
+	  end
 
       def get_oembed_data
         if video?

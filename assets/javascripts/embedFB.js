@@ -1,8 +1,8 @@
 (function ($) {
   'use strict';
 
-  $(".fb-post").attr("fb-xfbml-state", "rendered");
-  $(".fb-video").attr("fb-xfbml-state", "rendered");
+  $("#main .fb-post").attr("fb-xfbml-state", "rendered");
+  $("#main .fb-video").attr("fb-xfbml-state", "rendered");
   if ($('#fb-root').length == 0 )
   $('body').prepend('<div id="fb-root"></div>');
   (function(d, s, id) {
@@ -13,13 +13,29 @@
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 
-  $('#main').on('click', '.quote.facebook .title', function () {
-    parseXFBML(this[0]);
+  $(document).on('click', '.fb-xfbml-parse-ignore blockquote a:first', function ( event ) {
+	var quote = $( event.target ).closest('blockquote').parent();
+	$(quote).removeClass("fb-xfbml-parse-ignore");
+	if($(quote).hasClass("video"))
+		$(quote).removeClass("video").addClass("fb-video");
+	else
+		$(quote).removeClass("post").addClass("fb-post");
+    $(quote).each(function (i) {
+		parseXFBML(this[0]);
+	});
     return false;
   });
 
-  $('#main').on('click', '.quote.facebook i.fa-chevron-down', function () {
-    parseXFBML(this[0]);
+  $(document).on('click', '.fb-xfbml-parse-ignore blockquote i.fa-chevron-down', function ( event ) {
+	var quote = $( event.target ).closest('blockquote').parent();
+	$(quote).removeClass("fb-xfbml-parse-ignore");
+	if($(quote).hasClass("video"))
+		$(quote).removeClass("video").addClass("fb-video");
+	else
+		$(quote).removeClass("post").addClass("fb-post");
+	$(quote).each(function (i) {
+		parseXFBML(this[0]);
+	});
     return false;
   });
 
@@ -28,5 +44,12 @@
       FB.XFBML.parse(elem);
     }
   }
+  
+  $.fn.embedFB = function () {
+    $(this).each(function () {
+		$(this).children('blockquote a:first').prepend('<i class="fa fa-facebook-square"></i> ');
+		$(this).children('blockquote').prepend('<div class="quote-controls"><i class="fa fa-chevron-down" title="expand/collapse"></i></div>');
+	});
+  };
 
 })(jQuery);
