@@ -33,14 +33,14 @@ module Onebox
       def video?
         url =~ /\/video.php\?|\/videos\//
       end
-	  
-	  def get_html
-		if video?
+
+      def get_html
+        if video?
           data = get_oembed_data[:html]
-		  data = data.sub! 'fb-video', 'fb-xfbml-parse-ignore video'
+          data = data.sub! 'fb-video', 'fb-xfbml-parse-ignore video'
         else
           data = get_oembed_data[:html]
-		  data = data.sub! 'fb-post', 'fb-xfbml-parse-ignore post'
+          data = data.sub! 'fb-post', 'fb-xfbml-parse-ignore post'
         end
 	  end
 
